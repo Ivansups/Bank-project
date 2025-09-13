@@ -1,0 +1,73 @@
+services:
+  # PostgreSQL база данных
+  postgres:
+    image: postgres:15-alpine
+    container_name: bank_postgres
+    environment:
+      POSTGRES_DB: bank_db
+      POSTGRES_USER: bank_user
+      POSTGRES_PASSWORD: bank_password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./server/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5432:5432"
+    networks:
+      - bank_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U bank_user -d bank_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # FastAPI бэкенд
+  backend:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: bank_backend
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://bank_user:bank_password@postgres:5432/bank_db
+      - PYTHONPATH=/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - bank_network
+    volumes:
+      - ./server:/app
+    command: ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+
+  # Next.js фронтенд
+  frontend:
+    build:
+      context: ./front
+      dockerfile: Dockerfile
+      args:
+        - NEXT_PUBLIC_API_URL=http://localhost:8000
+        - YANDEX_CLIENT_ID=${YANDEX_CLIENT_ID}
+        - YANDEX_CLIENT_SECRET=${YANDEX_CLIENT_SECRET}
+        - AUTH_SECRET=${AUTH_SECRET}
+        - AUTH_URL=http://localhost:3000
+    container_name: bank_frontend
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:8000
+      - YANDEX_CLIENT_ID=${YANDEX_CLIENT_ID}
+      - YANDEX_CLIENT_SECRET=${YANDEX_CLIENT_SECRET}
+      - AUTH_SECRET=${AUTH_SECRET}
+      - AUTH_URL=http://localhost:3000
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    networks:
+      - bank_network
+
+volumes:
+  postgres_data:
+
+networks:
+  bank_network:
+    driver: bridge

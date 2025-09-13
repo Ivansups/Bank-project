@@ -1,0 +1,90 @@
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+
+interface ApiResponse<T> {
+  data?: T;
+  error?: string;
+  message?: string;
+}
+
+class ApiClient {
+  private baseURL: string;
+  
+  constructor(baseURL: string) {
+    this.baseURL = baseURL;
+  }
+  
+  private async request<T>(
+    endpoint: string, 
+    options: RequestInit = {}
+  ): Promise<ApiResponse<T>> {
+    const url = `${this.baseURL}${endpoint}`;
+    
+    const config: RequestInit = {
+      headers: {
+        'Content-Type': 'application/json',
+        ...options.headers,
+      },
+      ...options,
+    };
+    
+    try {
+      const response = await fetch(url, config);
+      
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.detail || `API Error: ${response.status} ${response.statusText}`);
+      }
+      
+      const data = await response.json();
+      return { data };
+    } catch (error) {
+      return { 
+        error: error instanceof Error ? error.message : 'Unknown error occurred' 
+      };
+    }
+  }
+  
+  // Методы для работы с пользователями
+  async getUsers() {
+    return this.request('/api/v1/users');
+  }
+  
+  async getUser(id: string) {
+    return this.request(`/api/v1/users/${id}`);
+  }
+  
+  async createUser(userData: Record<string, unknown>) {
+    return this.request('/api/v1/users', {
+      method: 'POST',
+      body: JSON.stringify(userData),
+    });
+  }
+  
+  async updateUser(id: string, userData: Record<string, unknown>) {
+    return this.request(`/api/v1/users/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(userData),
+    });
+  }
+  
+  async deleteUser(id: string) {
+    return this.request(`/api/v1/users/${id}`, {
+      method: 'DELETE',
+    });
+  }
+  
+  // Синхронизация пользователя из Яндекс
+  async syncYandexUser(userData: {
+    yandex_id: string;
+    email: string;
+    name: string;
+    avatar?: string;
+  }) {
+    return this.request('/api/v1/auth/sync', {
+      method: 'POST',
+      body: JSON.stringify(userData),
+    });
+  }
+}
+
+export const apiClient = new ApiClient(API_BASE_URL);

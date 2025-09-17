@@ -20,20 +20,7 @@ async def create_transaction(transaction: Annotated[TransactionCreate, Body(desc
     result = await create_transaction(transaction, db)
     return result
 
-@router.get("/transactions/{transaction_id}")
-async def get_transaction(transaction_id: str, db: AsyncSession = Depends(get_db)):
-    """Get transaction by ID"""
-    result = await get_transaction(transaction_id, db)
+@router.get("/transactions/one_user/{transaction_id}")
+async def get_one_transactions(transaction_id: str, db: AsyncSession = Depends(get_db)):
+    result = await get_one_user_transactions(transaction_id, db)
     return result
-
-@router.post("/transactions/transfer")
-async def transfer_money():
-    """Transfer money between accounts"""
-    # TODO: Implement money transfer
-    return {"message": "Money transfer - to be implemented"}
-
-@router.get("/transactions/history")
-async def get_transaction_history():
-    """Get transaction history with filters"""
-    # TODO: Implement transaction history with filters
-    return {"message": "Transaction history - to be implemented"}

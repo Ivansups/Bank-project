@@ -27,3 +27,6 @@ class UserModel(Base):
     
     # Связи
     admins = relationship('AdminModel', back_populates='user')
+    cards = relationship('CardModel', back_populates='user')
+    transactions = relationship('TransactionModel', back_populates='user')
+    credits = relationship('CreditsModel', back_populates='user')

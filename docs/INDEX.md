@@ -6,17 +6,8 @@
 
 ### Основные документы
 
-- [**README**](./README.md) - Общий обзор проекта и быстрый старт
 - [**Development Guide**](./DEVELOPMENT.md) - Руководство по разработке
 - [**Docker Setup**](./DOCKER.md) - Настройка и запуск с Docker
-
-### Компоненты
-
-- [**Frontend**](./frontend-README.md) - Next.js приложение
-- [**Backend**](./backend-README.md) - FastAPI сервер
-
-### Функциональность
-
 - [**Authentication**](./AUTHENTICATION.md) - Система аутентификации
 - [**API Documentation**](./API.md) - Документация API endpoints
 

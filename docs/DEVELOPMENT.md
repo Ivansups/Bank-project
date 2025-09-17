@@ -28,16 +28,22 @@ docker-compose up -d postgres
 
 #### Локальная установка
 
-1. Установите PostgreSQL
-2. Создайте базу данных:
-
 ```sql
 CREATE DATABASE bank_db;
 CREATE USER bank_user WITH PASSWORD 'bank_password';
 GRANT ALL PRIVILEGES ON DATABASE bank_db TO bank_user;
 ```
 
-### 3. Настройка бэкенда
+## Backend (FastAPI)
+
+### Технологии
+- **FastAPI** - современный веб-фреймворк
+- **SQLAlchemy** - ORM для работы с БД
+- **PostgreSQL** - реляционная база данных
+- **Pydantic** - валидация данных
+- **Alembic** - миграции БД
+
+### Настройка
 
 ```bash
 cd server
@@ -45,10 +51,9 @@ cd server
 # Создание виртуального окружения
 python -m venv venv
 
-# Активация виртуального окружения
-# Linux/Mac:
+# Активация (Linux/Mac)
 source venv/bin/activate
-# Windows:
+# Windows
 venv\Scripts\activate
 
 # Установка зависимостей
@@ -58,52 +63,19 @@ pip install -r requirements.txt
 uvicorn main:app --reload
 ```
 
-### 4. Настройка фронтенда
-
-```bash
-cd front
-
-# Установка зависимостей
-npm install
-
-# Настройка переменных окружения
-cp env.example .env
-
-# Запуск в режиме разработки
-npm run dev
-```
-
-## Структура проекта
+### Структура
 
 ```
-Bank-project/
-├── docs/                   # Документация
-├── front/                  # Next.js фронтенд
-│   ├── src/
-│   │   ├── app/           # App Router страницы
-│   │   ├── components/    # React компоненты
-│   │   └── lib/           # Утилиты и конфигурация
-│   ├── Dockerfile
-│   └── package.json
-├── server/                 # FastAPI бэкенд
-│   ├── api/               # API endpoints
-│   ├── crud/              # CRUD операции
-│   ├── db/                # Модели и сессии БД
-│   ├── schemas/           # Pydantic схемы
-│   ├── Dockerfile
-│   └── requirements.txt
-├── docker-compose.yml      # Docker Compose конфигурация
-└── env.docker.example      # Пример переменных окружения
+server/
+├── api/endpoints/     # API endpoints
+├── crud/             # CRUD операции
+├── db/models/        # Модели БД
+├── schemas/          # Pydantic схемы
+├── main.py           # Главный файл
+└── requirements.txt  # Зависимости
 ```
 
-## Конвенции кода
-
-### Python (FastAPI)
-
-- Используйте type hints
-- Следуйте PEP 8
-- Используйте async/await для I/O операций
-- Документируйте функции с docstrings
+### Конвенции кода
 
 ```python
 async def get_user(user_id: UUID, db: AsyncSession) -> UserModel | None:
@@ -120,12 +92,43 @@ async def get_user(user_id: UUID, db: AsyncSession) -> UserModel | None:
     return result.scalar_one_or_none()
 ```
 
-### TypeScript (Next.js)
+## Frontend (Next.js)
 
-- Используйте строгую типизацию
-- Следуйте ESLint правилам
-- Используйте функциональные компоненты
-- Применяйте React Hook Form для форм
+### Технологии
+- **Next.js 15** - React фреймворк с App Router
+- **TypeScript** - типизированный JavaScript
+- **TailwindCSS** - utility-first CSS
+- **NextAuth.js v5** - аутентификация
+- **Yandex OAuth** - авторизация
+
+### Настройка
+
+```bash
+cd front
+
+# Установка зависимостей
+npm install
+
+# Настройка переменных окружения
+cp env.example .env
+
+# Запуск в режиме разработки
+npm run dev
+```
+
+### Структура
+
+```
+front/
+├── src/
+│   ├── app/          # App Router страницы
+│   ├── components/   # React компоненты
+│   └── lib/          # Утилиты и конфигурация
+├── public/           # Статические файлы
+└── package.json      # Зависимости
+```
+
+### Конвенции кода
 
 ```typescript
 interface User {
@@ -146,47 +149,28 @@ const UserComponent: React.FC<{ user: User }> = ({ user }) => {
 
 ## Тестирование
 
-### Backend тесты
-
+### Backend
 ```bash
 cd server
 pytest
 ```
 
-### Frontend тесты
-
+### Frontend
 ```bash
 cd front
 npm test
 ```
 
-## Отладка
-
-### Backend
-
-1. Используйте `print()` или `logging` для отладки
-2. Проверьте логи FastAPI
-3. Используйте интерактивную документацию на `/docs`
-
-### Frontend
-
-1. Используйте React DevTools
-2. Проверьте консоль браузера
-3. Используйте Next.js DevTools
-
-## Git workflow
+## Git Workflow
 
 ### Ветки
-
 - `main` - основная ветка
 - `develop` - ветка разработки
 - `feature/*` - ветки для новых функций
 - `bugfix/*` - ветки для исправления багов
 
 ### Коммиты
-
 Используйте conventional commits:
-
 ```
 feat: add user authentication
 fix: resolve CORS issue
@@ -198,16 +182,14 @@ test: add unit tests for auth
 
 ## Добавление новых функций
 
-### 1. Backend
-
+### Backend
 1. Создайте модель в `db/models/`
 2. Создайте схему в `schemas/`
 3. Добавьте CRUD операции в `crud/`
 4. Создайте endpoint в `api/endpoints/`
 5. Добавьте тесты
 
-### 2. Frontend
-
+### Frontend
 1. Создайте компонент в `components/`
 2. Добавьте страницу в `app/`
 3. Обновите API клиент в `lib/`
@@ -216,14 +198,12 @@ test: add unit tests for auth
 ## Производительность
 
 ### Backend
-
 - Используйте async/await
 - Оптимизируйте SQL запросы
 - Используйте индексы в базе данных
 - Кэшируйте часто используемые данные
 
 ### Frontend
-
 - Используйте React.memo для компонентов
 - Применяйте lazy loading
 - Оптимизируйте изображения
@@ -232,38 +212,20 @@ test: add unit tests for auth
 ## Безопасность
 
 ### Backend
-
 - Валидируйте все входящие данные
 - Используйте prepared statements
 - Хешируйте пароли
 - Настройте CORS правильно
 
 ### Frontend
-
 - Санитизируйте пользовательский ввод
 - Используйте HTTPS в продакшене
 - Не храните секреты в коде
 - Валидируйте формы
 
-## Развертывание
-
-### Локальное тестирование
-
-```bash
-docker-compose up -d
-```
-
-### Продакшен
-
-1. Обновите переменные окружения
-2. Настройте SSL сертификаты
-3. Используйте внешнюю базу данных
-4. Настройте мониторинг
-
 ## Полезные команды
 
 ### Docker
-
 ```bash
 # Пересборка образов
 docker-compose build --no-cache
@@ -276,7 +238,6 @@ docker-compose down -v --rmi all
 ```
 
 ### Database
-
 ```bash
 # Подключение к БД
 docker-compose exec postgres psql -U bank_user -d bank_db
@@ -289,7 +250,6 @@ alembic upgrade head
 ```
 
 ### Frontend
-
 ```bash
 # Анализ bundle
 npm run analyze

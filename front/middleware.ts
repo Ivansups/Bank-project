@@ -19,7 +19,8 @@ export default async function middleware(req: NextRequest) {
     '/profile',
     '/cards',
     '/transactions',
-    '/admin'
+    '/admin',
+    '/profile'
   ];
   
   // Проверяем защищенные маршруты

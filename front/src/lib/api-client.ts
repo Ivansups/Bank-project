@@ -85,6 +85,57 @@ class ApiClient {
       body: JSON.stringify(userData),
     });
   }
+  // Методы для работы с транзакциями
+  async getTransactionsFromOneUser(userId: string) {
+    return this.request(`/api/v1/transactions/one_user/${userId}`);
+  }
+
+  async getTransactionsFromAllUsers() {
+    return this.request('/api/v1/transactions');
+  }
+
+  async createTransaction(transactionData: Record<string, unknown>) {
+    return this.request('/api/v1/transactions', {
+      method: 'POST',
+      body: JSON.stringify(transactionData),
+    });
+  }
+
+  // Методы для работы с картами
+  async getCardsFromOneUser(userId: string) {
+    return this.request(`/api/v1/cards?id=${userId}`);
+  }
+
+  async getCardsFromAllUsers() {
+    return this.request('/api/v1/cards');
+  }
+
+  async createCard(cardData: Record<string, unknown>) {
+    return this.request('/api/v1/cards', {
+      method: 'POST',
+      body: JSON.stringify(cardData),
+    });
+  }
+
+  // Методы для работы с платежами
+  async getPaymentsFromOneUser(userId: string) {
+    return this.request(`/api/v1/payments?id=${userId}`);
+  }
+
+  async getPaymentsFromAllUsers() {
+    return this.request('/api/v1/payments');
+  }
+
+  async createPayment(paymentData: Record<string, unknown>) {
+    return this.request('/api/v1/payments', {
+      method: 'POST',
+      body: JSON.stringify(paymentData),
+    });
+  }
 }
+
+
+
+
 
 export const apiClient = new ApiClient(API_BASE_URL);

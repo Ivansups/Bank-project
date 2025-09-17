@@ -12,7 +12,7 @@ export async function PUT(request: Request) {
         }
         const data = await res.json();
         return new Response(JSON.stringify(data), { status: 200 });
-    } catch (error) {
+    } catch {
         return new Response("Failed to update user", { status: 500 });
     }
 }
@@ -31,7 +31,7 @@ export async function DELETE(request: Request) {
         }
         const data = await res.json();
         return new Response(JSON.stringify(data), { status: 200 });
-    } catch (error) {
+    } catch {
         return new Response("Failed to delete user", { status: 500 });
     }
 }

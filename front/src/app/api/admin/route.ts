@@ -1,6 +1,7 @@
-export async function GET(request: Request, { params }: { params: { id: string } }) {
+export async function GET(request: Request, { params }: { params: Promise<Record<string, never>> }) {
     try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/${params.id}`, {
+        await params
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -15,7 +16,7 @@ export async function GET(request: Request, { params }: { params: { id: string }
         }
         const data = await res.json();
         return new Response(JSON.stringify(data), { status: 200 });
-    } catch (error) {
+    } catch {
         return new Response("Failed to fetch admin", { status: 500 });
     }
 }

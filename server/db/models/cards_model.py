@@ -6,7 +6,7 @@ from sqlalchemy.orm import relationship
 from .base import Base
 
 
-class CardsModel(Base):
+class CardModel(Base):
     __tablename__ = "cards"
     
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)

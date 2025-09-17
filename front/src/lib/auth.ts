@@ -21,6 +21,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         sameSite: "lax",
         path: "/",
         secure: false, // Для локальной разработки
+        domain: undefined, // Позволяет работать с любым доменом в локальной сети
       },
     },
   },
@@ -42,7 +43,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           });
           
           // Получаем админский статус из ответа API
-          token.isAdmin = userData.isAdmin || false
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          token.isAdmin = (userData.data as any)?.isAdmin || false
         } catch (error) {
           console.error('Failed to sync user with backend:', error);
           token.isAdmin = false // По умолчанию false при ошибке

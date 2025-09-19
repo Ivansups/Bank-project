@@ -1,80 +1,100 @@
-import { apiClient } from "@/lib/api-client";
-import { useEffect, useState } from "react";
-import { useSession } from "next-auth/react";
+"use client";
 
-interface Transaction {
-  id: string;
-  amount: number;
-  user_id: string;
-  transaction_type: string;
-  createdAt: string;
-  updatedAt: string;
+import { useState, useMemo, useEffect } from "react";
+import Transaction from "./Transaction";
+import { Transaction as TransactionType } from "@/types/transaction";
+import { LoadingSpinner, Card as UICard } from "@/components/ui";
+
+interface SetTransactionsProps {
+  transactions: TransactionType[];
+  loading?: boolean;
+  error?: string;
+  onViewDetails?: (id: string) => void;
+  onRepeat?: (id: string) => void;
 }
 
-export default function SetTransactionsComponent() {
-  const { data: session } = useSession();
-  const [transactions, setTransactions] = useState<Transaction[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string>("");
+export default function SetTransactions({ 
+  transactions, 
+  loading = false, 
+  error, 
+  onViewDetails, 
+  onRepeat 
+}: SetTransactionsProps) {
 
-  useEffect(() => {
-    const getUserTransactions = async () => {
-      try {
-        setLoading(true);
-        setError("");
-        const response = await apiClient.getTransactionsFromOneUser(session?.user?.id || "");
-        if (response.error) {
-          throw new Error(response.error);
-        }
-        setTransactions(response.data as Transaction[]);
-      } catch (error) {
-        console.error(error);
-        setError("There are no transactions");
-      } finally {
-        setLoading(false);
-      }
-    };
 
-    if (session?.user?.id) {
-      getUserTransactions();
-    }
-  }, [session?.user?.id]);
+
+    // Фильтрация транзакций по поисковому запросу
+
+    const [searchTerm, setSearchTerm] = useState<string>("");
+    const [currentPage, setCurrentPage] = useState<number>(1);
+    const [transactionsPerPage] = useState<number>(6);
+
+    const filteredTransactions = useMemo(() => {
+      if (!searchTerm) return transactions;
+      return transactions.filter(transaction =>
+        transaction.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        transaction.amount.toString().includes(searchTerm) ||
+        transaction.transaction_type.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        new Date(transaction.createdAt).toLocaleDateString().includes(searchTerm)
+      );
+    }, [transactions, searchTerm]);
+
+    // Пагинация
+    const totalPages = Math.ceil(filteredTransactions.length / transactionsPerPage);
+    const startIndex = (currentPage - 1) * transactionsPerPage;
+    const endIndex = startIndex + transactionsPerPage;
+    const currentTransactions = filteredTransactions.slice(startIndex, endIndex);
+
+    // Сброс страницы при изменении поиска
+    useEffect(() => {
+      setCurrentPage(1);
+    }, [searchTerm]);
+    
+
+  const handleViewDetails = (id: string) => {
+    onViewDetails?.(id);
+  };
+
+  const handleRepeat = (id: string) => {
+    onRepeat?.(id);
+  };
 
   return (
-    <div className="bg-white shadow-md rounded-lg p-6 w-full max-w-md mx-auto">
-      <h1 className="text-xl font-semibold mb-4 text-gray-800">Transactions</h1>
-      {loading && <p className="text-sm text-gray-500 mb-2">Loading...</p>}
-      {error && <p className="text-sm text-red-500 mb-2">Error: {error}</p>}
-      <div className="flex flex-col gap-4">
-        {transactions.map((transaction: Transaction, index: number) => (
-          <div
-            key={index}
-            className="border rounded-md p-4 bg-gray-50 flex flex-col gap-1"
-          >
-            <div className="text-sm text-gray-700">
-              <span className="font-medium">ID:</span> {transaction.id}
-            </div>
-            <div className="text-sm text-gray-700">
-              <span className="font-medium">User ID:</span> {transaction.user_id}
-            </div>
-            <div className="text-sm text-gray-700">
-              <span className="font-medium">Amount:</span> {transaction.amount}
-            </div>
-            <div className="text-sm text-gray-700">
-              <span className="font-medium">Type:</span> {transaction.transaction_type}
-            </div>
-            <div className="text-xs text-gray-500">
-              <span className="font-medium">Created:</span> {transaction.createdAt}
-            </div>
-            <div className="text-xs text-gray-500">
-              <span className="font-medium">Updated:</span> {transaction.updatedAt}
-            </div>
-          </div>
-        ))}
-        {!loading && !error && transactions.length === 0 && (
-          <p className="text-sm text-gray-500">No transactions found.</p>
-        )}
-      </div>
-    </div>
+    <UICard 
+      title="Транзакции"
+      variant="elevated"
+      className="w-full max-w-md mx-auto"
+    >
+      {loading && (
+        <LoadingSpinner 
+          size="lg" 
+          color="blue" 
+          text="Загрузка транзакций..." 
+        />
+      )}
+
+      {error && (
+        <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+          <p className="text-red-600">{error}</p>
+        </div>
+      )}
+
+      {!loading && !error && (
+        <div className="flex flex-col gap-4">
+          {currentTransactions.map((transaction: TransactionType) => (
+            <Transaction
+              key={transaction.id}
+              transaction={transaction}
+              className="border rounded-md p-4 bg-gray-50 flex flex-col gap-1"
+              onViewDetails={handleViewDetails}
+              onRepeat={handleRepeat}
+            />
+          ))}
+          {transactions.length === 0 && (
+            <p className="text-sm text-gray-500">Транзакции не найдены.</p>
+          )}
+        </div>
+      )}
+    </UICard>
   );
 }

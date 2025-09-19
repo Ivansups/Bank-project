@@ -1,26 +1,35 @@
-"use client"
 
-import SetTransactionsComponent from "@/components/SetTransactions"
-import SetCardsComponent from "@/components/SetCards"    
-import { useSession } from "next-auth/react";
+import { redirect } from "next/navigation";
+import { auth } from "@/lib/auth";
+import { getUserCards, getUserTransactions } from "@/lib/server-action";
+import { PageLayout } from "@/components/layout";
+import SetCards from "@/components/SetCards";
+import SetTransactions from "@/components/SetTransactions";
 
-export default function ProfilePage() {
-  const { data: session, status } = useSession();
-
-  if (status === "loading") {
-    return <div className="flex items-center justify-center min-h-screen"   >
-      <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-indigo-600"></div>
-    </div>;
+export default async function ProfilePage() {
+  const session = await auth();
+  
+  if (!session?.user?.id) {
+    redirect('/auth/signin');
   }
 
-
+  // Загружаем данные на сервере
+  const [cards, transactions] = await Promise.all([
+    getUserCards(session.user.id),
+    getUserTransactions(session.user.id),
+  ]);
 
   return (
-    <div className="flex flex-col gap-4 justify-center items-center py-12">
-      <h1 className="text-5xl font-bold text-white-800">Profile</h1>
-      <p className="text-4xl text-white-500 font-bold">Добро пожаловать, {session?.user?.name || "User"}</p>
-      <SetTransactionsComponent />
-      <SetCardsComponent />
-    </div>
-  )
+    <PageLayout 
+      title="Профиль"
+      subtitle={`Добро пожаловать, ${session.user.name || "User"}`}
+      maxWidth="2xl"
+      className="py-8"
+    >
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <SetTransactions transactions={transactions} />
+        <SetCards cards={cards} />
+      </div>
+    </PageLayout>
+  );
 }

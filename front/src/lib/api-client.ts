@@ -132,6 +132,10 @@ class ApiClient {
       body: JSON.stringify(paymentData),
     });
   }
+
+  async getDashboardFromOneUser(userId: string) {
+    return this.request(`/api/v1/dashboards?id=${userId}`);
+  }
 }
 
 

@@ -1,6 +1,6 @@
 import { TransactionProps } from "@/types/transaction";
 
-export default function Transaction({ transaction, className = "", onViewDetails, onRepeat }: TransactionProps) {
+export default function Transaction({ transaction, className = "" }: TransactionProps) {
   const formatAmount = (amount: number) => {
     return new Intl.NumberFormat('ru-RU', {
       style: 'currency',

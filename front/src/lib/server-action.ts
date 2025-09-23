@@ -40,3 +40,17 @@ export const getDashboardStats = async (): Promise<DashboardStats> => {
         };
     }
 };
+
+export const getUserDashboard = async (userId: string): Promise<DashboardStats> => {
+    try {
+        const response = await apiClient.getDashboardFromOneUser(userId);
+        return response.data as DashboardStats;
+    } catch (error) {
+        console.error(error);
+        return {
+            balance: 0,
+            transactionsCount: 0,
+            cardsCount: 0
+        };
+    }
+};

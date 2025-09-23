@@ -47,16 +47,16 @@ services:
       dockerfile: Dockerfile
       args:
         - NEXT_PUBLIC_API_URL=http://localhost:8000
-        - YANDEX_CLIENT_ID=${YANDEX_CLIENT_ID:-your-yandex-client-id}
-        - YANDEX_CLIENT_SECRET=${YANDEX_CLIENT_SECRET:-your-yandex-client-secret}
-        - AUTH_SECRET=${AUTH_SECRET:-your-secret-key-here}
+        - YANDEX_CLIENT_ID=${YANDEX_CLIENT_ID:-}
+        - YANDEX_CLIENT_SECRET=${YANDEX_CLIENT_SECRET:-}
+        - AUTH_SECRET=${AUTH_SECRET:-bank-auth-secret-key-2024}
         - AUTH_URL=http://localhost:3000
     container_name: bank_frontend
     environment:
       - NEXT_PUBLIC_API_URL=http://localhost:8000
-      - YANDEX_CLIENT_ID=${YANDEX_CLIENT_ID:-your-yandex-client-id}
-      - YANDEX_CLIENT_SECRET=${YANDEX_CLIENT_SECRET:-your-yandex-client-secret}
-      - AUTH_SECRET=${AUTH_SECRET:-your-secret-key-here}
+      - YANDEX_CLIENT_ID=${YANDEX_CLIENT_ID:-}
+      - YANDEX_CLIENT_SECRET=${YANDEX_CLIENT_SECRET:-}
+      - AUTH_SECRET=${AUTH_SECRET:-bank-auth-secret-key-2024}
       - AUTH_URL=http://localhost:3000
     ports:
       - "3000:3000"

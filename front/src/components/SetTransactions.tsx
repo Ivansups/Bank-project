@@ -25,7 +25,7 @@ export default function SetTransactions({
 
     // Фильтрация транзакций по поисковому запросу
 
-    const [searchTerm, setSearchTerm] = useState<string>("");
+    const [searchTerm] = useState<string>("");
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [transactionsPerPage] = useState<number>(6);
 
@@ -40,7 +40,7 @@ export default function SetTransactions({
     }, [transactions, searchTerm]);
 
     // Пагинация
-    const totalPages = Math.ceil(filteredTransactions.length / transactionsPerPage);
+    // const totalPages = Math.ceil(filteredTransactions.length / transactionsPerPage);
     const startIndex = (currentPage - 1) * transactionsPerPage;
     const endIndex = startIndex + transactionsPerPage;
     const currentTransactions = filteredTransactions.slice(startIndex, endIndex);

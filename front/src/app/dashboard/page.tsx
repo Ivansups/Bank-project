@@ -1,10 +1,10 @@
-"use client"
+  "use client"
 
 import React from "react"
 import { useSession } from "next-auth/react"
 import { signOut } from "@/lib/auth-client"
 import { DashboardLayout } from "@/components/layout";
-import { Card, Button, LoadingSpinner } from "@/components/ui";
+import { Card, LoadingSpinner } from "@/components/ui";
 
 export default function DashboardPage() {
   const { data: session, status } = useSession()
@@ -39,7 +39,10 @@ export default function DashboardPage() {
 
   return (
     <DashboardLayout 
-      user={session.user}
+      user={{
+        name: session.user?.name || undefined,
+        isAdmin: session.isAdmin || false
+      }}
       onSignOut={handleSignOut}
       showSidebar={true}
       sidebarItems={sidebarItems}

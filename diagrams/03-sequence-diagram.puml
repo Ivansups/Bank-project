@@ -1,0 +1,68 @@
+@startuml Банковская система - Диаграмма последовательности
+
+!theme plain
+
+actor "Клиент банка" as Client
+participant "Frontend" as Frontend
+participant "API Gateway" as API
+participant "Backend Service" as Backend
+participant "Database" as DB
+actor "Администратор" as Admin
+
+== Подача заявки на кредит ==
+Client -> Frontend: Подать заявку на кредит
+Frontend -> API: POST /api/credit-requests
+API -> Backend: Создать заявку на кредит
+Backend -> DB: Сохранить заявку (status: PENDING)
+DB --> Backend: Заявка сохранена
+Backend --> API: Заявка создана
+API --> Frontend: Успешно создана
+Frontend --> Client: Заявка подана
+
+== Обработка заявки администратором ==
+Admin -> Frontend: Просмотр заявок на кредит
+Frontend -> API: GET /api/admin/credit-requests
+API -> Backend: Получить все заявки
+Backend -> DB: SELECT заявки со статусом PENDING
+DB --> Backend: Список заявок
+Backend --> API: Заявки получены
+API --> Frontend: Список заявок
+Frontend --> Admin: Отображение заявок
+
+alt Одобрение заявки
+  Admin -> Frontend: Одобрить заявку
+  Frontend -> API: PUT /api/admin/credit-requests/{id}/approve
+  API -> Backend: Одобрить заявку
+  Backend -> DB: Обновить статус заявки (APPROVED)
+  Backend -> DB: Создать кредит
+  DB --> Backend: Кредит создан
+  Backend --> API: Заявка одобрена
+  API --> Frontend: Успешно одобрена
+  Frontend --> Admin: Заявка одобрена
+else Отклонение заявки
+  Admin -> Frontend: Отклонить заявку
+  Frontend -> API: PUT /api/admin/credit-requests/{id}/reject
+  API -> Backend: Отклонить заявку
+  Backend -> DB: Обновить статус заявки (REJECTED)
+  DB --> Backend: Статус обновлен
+  Backend --> API: Заявка отклонена
+  API --> Frontend: Успешно отклонена
+  Frontend --> Admin: Заявка отклонена
+end
+
+== Уведомление клиента ==
+Backend -> Frontend: Уведомление об изменении статуса
+Frontend --> Client: Статус заявки изменен
+
+note right of Client
+  Клиент может просматривать
+  статус своих заявок
+end note
+
+note right of Admin
+  Администратор может одобрять
+  или отклонять заявки с указанием
+  причины отклонения
+end note
+
+@enduml

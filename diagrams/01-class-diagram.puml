@@ -1,0 +1,86 @@
+@startuml Банковская система - Диаграмма классов
+
+!theme plain
+skinparam classAttributeIconSize 0
+
+' Основные классы системы
+class "Клиент банка" as Client {
+  - id: UUID
+  - yandex_id: String
+  - name: String
+  - email: String
+  - avatar: String
+  - last_login: DateTime
+  - createdAt: DateTime
+  - updatedAt: DateTime
+}
+
+class "Банковский счет" as Account {
+  - id: UUID
+  - amount: Integer
+  - user_id: UUID
+  - createdAt: DateTime
+  - updatedAt: DateTime
+}
+
+class "Транзакция" as Transaction {
+  - id: UUID
+  - amount: Float
+  - user_id: UUID
+  - transaction_type: Enum
+  - createdAt: DateTime
+  - updatedAt: DateTime
+}
+
+class "Кредит" as Credit {
+  - id: UUID
+  - amount: Integer
+  - user_id: UUID
+  - credit_type: Enum
+  - status: Enum
+  - createdAt: DateTime
+  - updatedAt: DateTime
+}
+
+class "Заявка на кредит" as CreditRequest {
+  - id: UUID
+  - amount: Integer
+  - user_id: UUID
+  - status: Enum
+  - admin_id: UUID
+  - reason: String
+  - createdAt: DateTime
+  - updatedAt: DateTime
+}
+
+class "Администратор" as Admin {
+  - id: UUID
+  - user_id: UUID
+  - permissions: Array[String]
+  - createdAt: DateTime
+  - updatedAt: DateTime
+}
+
+' Связи между классами
+Client ||--o{ Account : "владеет"
+Client ||--o{ Transaction : "совершает"
+Client ||--o{ Credit : "имеет"
+Client ||--o{ CreditRequest : "подает"
+Client ||--|| Admin : "может быть"
+
+Admin ||--o{ CreditRequest : "обрабатывает"
+
+' Настройки отображения
+note right of Client
+  Основной пользователь системы
+  Управляет счетами и транзакциями
+  Подает заявки на кредит
+end note
+
+note right of Admin
+  Специальная роль пользователя
+  Имеет расширенные права доступа
+  Может одобрять/отклонять заявки
+end note
+
+@enduml

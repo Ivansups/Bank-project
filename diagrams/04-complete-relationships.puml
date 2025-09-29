@@ -1,0 +1,19 @@
+@startuml Банковская система - Полная схема связей
+
+!theme plain
+
+class "Клиент банка" as Client
+class "Банковский счет" as Account
+class "Транзакция" as Transaction
+class "Кредит" as Credit
+class "Заявка на кредит" as CreditRequest
+class "Администратор" as Admin
+
+Client ||--o{ Account
+Client ||--o{ Transaction
+Client ||--o{ Credit
+Client ||--o{ CreditRequest
+Client ||--|| Admin
+Admin ||--o{ CreditRequest
+
+@enduml

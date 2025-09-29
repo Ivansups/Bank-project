@@ -1,0 +1,98 @@
+@startuml Банковская система - Диаграмма компонентов
+
+!theme plain
+
+package "Frontend (Next.js)" {
+  component "Auth Pages" as AuthPages
+  component "Dashboard" as Dashboard
+  component "Profile Management" as Profile
+  component "Account Management" as AccountMgmt
+  component "Transaction Management" as TransactionMgmt
+  component "Credit Request" as CreditReq
+  component "Admin Panel" as AdminPanel
+}
+
+package "API Layer" {
+  component "NextAuth.js" as NextAuth
+  component "API Routes" as APIRoutes
+  component "Middleware" as Middleware
+}
+
+package "Backend (FastAPI)" {
+  component "Authentication Service" as AuthService
+  component "User Service" as UserService
+  component "Account Service" as AccountService
+  component "Transaction Service" as TransactionService
+  component "Credit Service" as CreditService
+  component "Admin Service" as AdminService
+}
+
+package "Database Layer" {
+  database "PostgreSQL" as PostgreSQL
+  component "SQLAlchemy ORM" as ORM
+  component "Alembic Migrations" as Migrations
+}
+
+package "External Services" {
+  component "Yandex OAuth" as YandexOAuth
+  component "Payment Gateway" as PaymentGateway
+  component "Notification Service" as NotificationService
+}
+
+' Связи между компонентами Frontend и API
+AuthPages --> NextAuth
+Dashboard --> APIRoutes
+Profile --> APIRoutes
+AccountMgmt --> APIRoutes
+TransactionMgmt --> APIRoutes
+CreditReq --> APIRoutes
+AdminPanel --> APIRoutes
+
+NextAuth --> YandexOAuth
+APIRoutes --> Middleware
+
+' Связи между API и Backend
+APIRoutes --> AuthService
+APIRoutes --> UserService
+APIRoutes --> AccountService
+APIRoutes --> TransactionService
+APIRoutes --> CreditService
+APIRoutes --> AdminService
+
+' Связи между Backend и Database
+AuthService --> ORM
+UserService --> ORM
+AccountService --> ORM
+TransactionService --> ORM
+TransactionService --> PaymentGateway
+CreditService --> ORM
+AdminService --> ORM
+
+ORM --> PostgreSQL
+Migrations --> PostgreSQL
+
+' Настройки отображения
+note right of AuthPages
+  Современный веб-интерфейс
+  на Next.js с TypeScript
+  и TailwindCSS
+end note
+
+note right of AuthService
+  RESTful API на FastAPI
+  с асинхронной обработкой
+  и валидацией данных
+end note
+
+note right of PostgreSQL
+  Реляционная база данных
+  PostgreSQL с ORM SQLAlchemy
+  и миграциями Alembic
+end note
+
+note right of YandexOAuth
+  Интеграция с Яндекс OAuth
+  для аутентификации пользователей
+end note
+
+@enduml

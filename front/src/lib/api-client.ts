@@ -117,6 +117,19 @@ class ApiClient {
     });
   }
 
+  async updateCard(cardId: string, cardData: Record<string, unknown>) {
+    return this.request(`/api/v1/cards/${cardId}`, {
+      method: 'PUT',
+      body: JSON.stringify(cardData),
+    });
+  }
+
+  async deleteCard(cardId: string) {
+    return this.request(`/api/v1/cards/${cardId}`, {
+      method: 'DELETE',
+    });
+  }
+
   // Методы для работы с платежами
   async getPaymentsFromOneUser(userId: string) {
     return this.request(`/api/v1/payments?id=${userId}`);

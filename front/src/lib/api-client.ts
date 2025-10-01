@@ -1,4 +1,7 @@
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+// Для серверных запросов используем API_URL (может быть localhost или backend), для клиентских - NEXT_PUBLIC_API_URL
+const API_BASE_URL = typeof window === 'undefined' 
+  ? (process.env.API_URL || process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000')
+  : (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000');
 
 interface ApiResponse<T> {
   data?: T;

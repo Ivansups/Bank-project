@@ -1,20 +1,20 @@
-export async function GET(request: Request) {
+import { createTransaction, getTransactions } from "@/dal/transaction";
+
+export async function GET() {
     try {
-        const { searchParams } = new URL(request.url);
-        const userId = searchParams.get("id");
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/transactions/one_user/${userId}`, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            credentials: "include",
-        })
-        if (!res.ok) {
-            return new Response("Failed to fetch transactions", { status: 500 });
-        }
-        const data = await res.json();
-        return new Response(JSON.stringify(data), { status: 200 });
+        const res = await getTransactions();
+        return new Response(JSON.stringify(res), { status: 200 });
     } catch {
         return new Response("Failed to fetch transactions", { status: 500 });
+    }
+}
+
+export async function POST(request: Request) {
+    try {
+        const body = await request.json();
+        const res = await createTransaction(body);
+        return new Response(JSON.stringify(res), { status: 200 });
+    } catch {
+        return new Response("Failed to create transaction", { status: 500 });
     }
 }

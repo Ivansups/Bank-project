@@ -79,13 +79,21 @@ async def delete_user(user_id: str, db: AsyncSession) -> bool:
 
 async def sync_yandex_user(user_data: UserSync, db: AsyncSession):
     """Синхронизация пользователя из Яндекс OAuth с базой данных"""
-    result = await db.execute(
-        select(UserModel).where(UserModel.yandex_id == user_data.yandex_id)
+    # Ищем по email (приоритет) или yandex_id
+    result_email = await db.execute(
+        select(UserModel).where(UserModel.email == user_data.email)
     )
-    existing_user = result.scalar_one_or_none()
+    existing_user = result_email.scalar_one_or_none()
+    
+    if not existing_user:
+        result_yandex = await db.execute(
+            select(UserModel).where(UserModel.yandex_id == user_data.yandex_id)
+        )
+        existing_user = result_yandex.scalar_one_or_none()
     
     if existing_user:
         # Обновляем существующего пользователя
+        existing_user.yandex_id = user_data.yandex_id  # Обновляем yandex_id на случай если он изменился
         existing_user.name = user_data.name
         existing_user.email = user_data.email
         existing_user.avatar = user_data.avatar

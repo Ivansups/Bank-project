@@ -1,53 +1,54 @@
 import NextAuth from "next-auth"
 import Yandex from "next-auth/providers/yandex"
-import { apiClient } from "./api-client"
+import { syncYandexUser, isUserAdmin } from "./db"
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [
     Yandex({
       clientId: process.env.YANDEX_CLIENT_ID!,
       clientSecret: process.env.YANDEX_CLIENT_SECRET!,
+      authorization: {
+        params: {
+          force_confirm: "yes", // Принудительно показывать окно подтверждения
+        }
+      }
     })
   ],
   pages: {
     signIn: "/auth/signin",
   },
-  useSecureCookies: false, // Для локальной разработки
-  cookies: {
-    pkceCodeVerifier: {
-      name: "next-auth.pkce.code_verifier",
-      options: {
-        httpOnly: true,
-        sameSite: "lax",
-        path: "/",
-        secure: false, // Для локальной разработки
-        domain: undefined, // Позволяет работать с любым доменом в локальной сети
-      },
-    },
-  },
+  trustHost: true,
   callbacks: {
     async jwt({ token, user, account }) {
       if (user) {
-        token.id = user.id
-        token.email = user.email
-        token.name = user.name
-        token.picture = user.image
-        
-        // Синхронизируем пользователя с бэкендом и получаем админский статус
         try {
-          const userData = await apiClient.syncYandexUser({
+          console.log('🔑 JWT callback - Syncing user:', user.id, user.email);
+          
+          // Синхронизируем пользователя напрямую с PostgreSQL
+          const dbUser = await syncYandexUser({
             yandex_id: user.id,
             email: user.email || '',
             name: user.name || '',
-            avatar: user.image || undefined
+            avatar: user.image || null
           });
           
-          // Получаем админский статус из ответа API
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          token.isAdmin = (userData.data as any)?.isAdmin || false
+          console.log('🔑 JWT callback - DB user created/updated:', dbUser.id);
+          
+          // Проверяем является ли пользователь администратором
+          const isAdmin = await isUserAdmin(dbUser.id);
+          
+          token.id = dbUser.id
+          token.email = dbUser.email
+          token.name = dbUser.name
+          token.picture = dbUser.avatar
+          token.isAdmin = isAdmin
         } catch (error) {
-          console.error('Failed to sync user with backend:', error);
-          token.isAdmin = false // По умолчанию false при ошибке
+          console.error('❌ Failed to sync user with database:', error);
+          token.id = user.id
+          token.email = user.email
+          token.name = user.name
+          token.picture = user.image
+          token.isAdmin = false
         }
       }
       

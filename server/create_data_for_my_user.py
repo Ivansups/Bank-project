@@ -98,18 +98,13 @@ async def create_data_for_my_user(db: AsyncSession):
     await db.commit()
     
     # Создаем транзакции
-    transaction_types = ["deposit", "withdrawal", "transfer", "payment", "refund"]
-    descriptions = [
-        "Пополнение счета", "Снятие наличных", "Перевод на другую карту", "Оплата покупки", 
-        "Возврат средств", "Зарплата", "Пенсия", "Стипендия", "Доход от инвестиций", "Комиссия банка"
-    ]
+    transaction_types = ["ADD", "SUB"]
     
     created_transactions = 0
     
     for i in range(20):
-        amount = random.randint(1000, 100000)
+        amount = random.uniform(100.0, 10000.0)
         transaction_type = random.choice(transaction_types)
-        description = random.choice(descriptions)
         
         days_ago = random.randint(1, 90)
         created_date = datetime.utcnow() - timedelta(days=days_ago)
@@ -118,22 +113,21 @@ async def create_data_for_my_user(db: AsyncSession):
         
         await db.execute(
             text("""
-                INSERT INTO transactions (id, amount, user_id, transaction_type, description, "createdAt", "updatedAt")
-                VALUES (:id, :amount, :user_id, :transaction_type, :description, :createdAt, :updatedAt)
+                INSERT INTO transactions (id, amount, user_id, transaction_type, "createdAt", "updatedAt")
+                VALUES (:id, :amount, :user_id, :transaction_type, :createdAt, :updatedAt)
             """),
             {
                 "id": transaction_id,
-                "amount": amount,
+                "amount": round(amount, 2),
                 "user_id": user_id,
                 "transaction_type": transaction_type,
-                "description": description,
                 "createdAt": created_date,
                 "updatedAt": created_date
             }
         )
         
         created_transactions += 1
-        print(f"💸 Создана транзакция #{i+1}: {amount:,} руб ({transaction_type}) - {description}")
+        print(f"💸 Создана транзакция #{i+1}: {amount:.2f} руб ({transaction_type})")
     
     await db.commit()
     

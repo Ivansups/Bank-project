@@ -25,6 +25,20 @@ class UserModel(Base):
     createdAt = Column(DateTime, default=datetime.utcnow)
     updatedAt = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     
+    #Данные, требуемые для создания карты, кредита и транзакции
+    city = Column(String(255), nullable=True)
+    phone = Column(String(16), nullable=True)
+    age = Column(Integer, nullable=True)
+    gender = Column(Enum(Gender), nullable=True)
+    passport_series = Column(String(4), nullable=True)
+    passport_number = Column(String(6), nullable=True)
+    place_of_registration = Column(String(255), nullable=True)
+    place_of_work = Column(String(255), nullable=True)
+    position = Column(String(255), nullable=True)
+
+    cout_of_credits = Column(Integer, nullable=True)
+    count_of_cards = Column(Integer, nullable=True)
+    
     # Связи
     admins = relationship('AdminModel', back_populates='user')
     cards = relationship('CardModel', back_populates='user')

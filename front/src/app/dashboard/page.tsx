@@ -1,29 +1,22 @@
-  "use client"
-
 import React from "react"
-import { useSession } from "next-auth/react"
-import { signOut } from "@/lib/auth-client"
-import { DashboardLayout } from "@/components/layout";
+import { auth } from "@/lib/auth"
+import DashboardClient from "@/components/DashboardClient";
 import { Card, LoadingSpinner } from "@/components/ui";
 
-export default function DashboardPage() {
-  const { data: session, status } = useSession()
+export default async function DashboardPage() {
+  const session = await auth()
 
-  if (status === "loading") {
+  if (!session) {
     return (
-      <DashboardLayout>
+      <DashboardClient>
         <LoadingSpinner 
           size="xl" 
           color="blue" 
           text="Загрузка панели управления..." 
           fullScreen={true}
         />
-      </DashboardLayout>
+      </DashboardClient>
     )
-  }
-
-  if (!session) {
-    return null
   }
 
   const sidebarItems = [
@@ -33,17 +26,12 @@ export default function DashboardPage() {
     { label: "Карты", href: "/cards" },
   ];
 
-  const handleSignOut = () => {
-    signOut({ callbackUrl: "/" });
-  };
-
   return (
-    <DashboardLayout 
+    <DashboardClient 
       user={{
         name: session.user?.name || undefined,
         isAdmin: session.isAdmin || false
       }}
-      onSignOut={handleSignOut}
       showSidebar={true}
       sidebarItems={sidebarItems}
     >
@@ -102,6 +90,6 @@ export default function DashboardPage() {
           </Card>
         )}
       </div>
-    </DashboardLayout>
+    </DashboardClient>
   )
 }

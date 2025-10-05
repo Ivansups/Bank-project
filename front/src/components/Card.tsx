@@ -1,3 +1,5 @@
+'use client';
+
 import { CardProps } from "@/types/card";
 
 export default function Card({ card, onTopUp, onDetails, className = "" }: CardProps) {

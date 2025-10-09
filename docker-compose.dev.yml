@@ -21,11 +21,11 @@ services:
       retries: 5
 
   # FastAPI бэкенд
-  backend:
+  server:
     build:
       context: ./server
       dockerfile: Dockerfile
-    container_name: bank_backend
+    container_name: bank_server
     environment:
       - DATABASE_URL=postgresql+asyncpg://bank_user:bank_password@postgres:5432/bank_db
       - PYTHONPATH=/app
@@ -47,7 +47,7 @@ services:
     working_dir: /app
     environment:
       - NEXT_PUBLIC_API_URL=http://localhost:8000
-      - API_URL=http://backend:8000
+      - API_URL=http://server:8000
       - YANDEX_CLIENT_ID=${YANDEX_CLIENT_ID}
       - YANDEX_CLIENT_SECRET=${YANDEX_CLIENT_SECRET}
       - AUTH_SECRET=${AUTH_SECRET}
@@ -56,7 +56,7 @@ services:
     ports:
       - "3000:3000"
     depends_on:
-      - backend
+      - server
     networks:
       - bank_network
     volumes:

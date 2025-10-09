@@ -7,11 +7,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     Yandex({
       clientId: process.env.YANDEX_CLIENT_ID!,
       clientSecret: process.env.YANDEX_CLIENT_SECRET!,
-      authorization: {
-        params: {
-          force_confirm: "yes", // Принудительно показывать окно подтверждения
-        }
-      }
     })
   ],
   pages: {
@@ -23,20 +18,20 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       if (user) {
         try {
           console.log('🔑 JWT callback - Syncing user:', user.id, user.email);
-          
-          // Синхронизируем пользователя напрямую с PostgreSQL
+
+          // Синхронизируем пользователя с PostgreSQL
           const dbUser = await syncYandexUser({
             yandex_id: user.id,
             email: user.email || '',
             name: user.name || '',
             avatar: user.image || null
           });
-          
+
           console.log('🔑 JWT callback - DB user created/updated:', dbUser.id);
-          
+
           // Проверяем является ли пользователь администратором
           const isAdmin = await isUserAdmin(dbUser.id);
-          
+
           token.id = dbUser.id
           token.email = dbUser.email
           token.name = dbUser.name
@@ -51,11 +46,11 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           token.isAdmin = false
         }
       }
-      
+
       if (account) {
         token.accessToken = account.access_token
       }
-      
+
       return token
     },
     async session({ session, token }) {

@@ -6,13 +6,14 @@ import Link from "next/link"
 export default function Home() {
   const { data: session, status } = useSession()
 
-  if (status === "loading") {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-indigo-600"></div>
-      </div>
-    )
-  }
+  // Временно отключаем проверку загрузки для тестирования модалки
+  // if (status === "loading") {
+  //   return (
+  //     <div className="flex items-center justify-center min-h-screen">
+  //       <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-indigo-600"></div>
+  //     </div>
+  //   )
+  // }
 
   if (session) {
     return (
@@ -67,14 +68,14 @@ export default function Home() {
           <p className="mx-auto mt-6 max-w-2xl text-lg tracking-tight text-white/80 mb-10">
             Безопасные транзакции, удобное управление финансами и современный интерфейс для всех ваших банковских потребностей.
           </p>
-          <div className="mt-10 flex justify-center gap-x-6">
-            <Link
-              className="group inline-flex items-center justify-center rounded-full py-4 px-8 text-lg font-semibold focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 bg-white text-gray-900 hover:bg-gray-100 hover:text-gray-800 active:bg-gray-200 active:text-gray-700 focus-visible:outline-white shadow-lg transition-all duration-200 hover:scale-105"
-              href="/auth/signin"
-            >
-              Войти через Яндекс
-            </Link>
-          </div>
+              <div className="mt-10 flex justify-center gap-x-6">
+                <Link
+                  className="group inline-flex items-center justify-center rounded-full py-4 px-8 text-lg font-semibold focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 bg-white text-gray-900 hover:bg-gray-100 hover:text-gray-800 active:bg-gray-200 active:text-gray-700 focus-visible:outline-white shadow-lg transition-all duration-200 hover:scale-105"
+                  href="/auth/signin"
+                >
+                  Войти через Яндекс
+                </Link>
+              </div>
         </div>
       </div>
     </div>

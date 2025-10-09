@@ -23,7 +23,7 @@ export default function AuthLayout({
   className = ''
 }: AuthLayoutProps) {
   return (
-    <div className={`min-h-screen bg-gradient-to-br from-green-500 to-blue-500 flex flex-col justify-center py-12 sm:px-6 lg:px-8 ${className}`}>
+    <div className={`min-h-screen flex flex-col justify-center py-12 sm:px-6 lg:px-8 ${className}`}>
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         {showBackButton && (
           <div className="mb-6">

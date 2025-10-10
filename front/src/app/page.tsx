@@ -1,20 +1,11 @@
-"use client"
-
-import { useSession, signOut } from "next-auth/react"
+// front/src/app/page.tsx
 import Link from "next/link"
+import { auth, signOut } from "@/lib/auth"
+import { redirect } from "next/navigation"
 
-export default function Home() {
-  const { data: session, status } = useSession()
-
-  // Временно отключаем проверку загрузки для тестирования модалки
-  // if (status === "loading") {
-  //   return (
-  //     <div className="flex items-center justify-center min-h-screen">
-  //       <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-indigo-600"></div>
-  //     </div>
-  //   )
-  // }
-
+export default async function Home() {
+  const session = await auth()
+  
   if (session) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -33,12 +24,17 @@ export default function Home() {
               >
                 Перейти в панель управления
               </Link>
-              <button
-                onClick={() => signOut({ callbackUrl: "/" })}
-                className="inline-flex items-center px-8 py-4 border border-white/20 text-lg font-medium rounded-lg text-white bg-transparent hover:bg-white/10 shadow-lg transition-all duration-200 hover:scale-105"
-              >
-                Выйти
-              </button>
+              <form action={async () => {
+                "use server"
+                await signOut({ redirectTo: "/" })
+              }}>
+                <button
+                  type="submit"
+                  className="inline-flex items-center px-8 py-4 border border-white/20 text-lg font-medium rounded-lg text-white bg-transparent hover:bg-white/10 shadow-lg transition-all duration-200 hover:scale-105"
+                >
+                  Выйти
+                </button>
+              </form>
             </div>
           </div>
         </div>
@@ -68,14 +64,14 @@ export default function Home() {
           <p className="mx-auto mt-6 max-w-2xl text-lg tracking-tight text-white/80 mb-10">
             Безопасные транзакции, удобное управление финансами и современный интерфейс для всех ваших банковских потребностей.
           </p>
-              <div className="mt-10 flex justify-center gap-x-6">
-                <Link
-                  className="group inline-flex items-center justify-center rounded-full py-4 px-8 text-lg font-semibold focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 bg-white text-gray-900 hover:bg-gray-100 hover:text-gray-800 active:bg-gray-200 active:text-gray-700 focus-visible:outline-white shadow-lg transition-all duration-200 hover:scale-105"
-                  href="/auth/signin"
-                >
-                  Войти через Яндекс
-                </Link>
-              </div>
+          <div className="mt-10 flex justify-center gap-x-6">
+            <Link
+              className="group inline-flex items-center justify-center rounded-full py-4 px-8 text-lg font-semibold focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 bg-white text-gray-900 hover:bg-gray-100 hover:text-gray-800 active:bg-gray-200 active:text-gray-700 focus-visible:outline-white shadow-lg transition-all duration-200 hover:scale-105"
+              href="/auth/signin"
+            >
+              Войти через Яндекс
+            </Link>
+          </div>
         </div>
       </div>
     </div>

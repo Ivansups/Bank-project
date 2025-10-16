@@ -3,8 +3,20 @@ import { auth } from "@/lib/auth"
 import DashboardClient from "@/components/DashboardClient";
 import { Card, LoadingSpinner } from "@/components/ui";
 import ExchageRate from "@/components/ExchageRate";
+import { checkUserDataIsValid } from "@/dal/user";
+import UpdateUserData from "@/components/UpdateUserData";
+import DynamicBackground from "@/components/DynamicBackground";
+  // const userDataIsValid = await checkUserDataIsValid(session?.user?.id || '')
 
+  // if (!userDataIsValid) {
+  //   return (
+  //     <DashboardClient>
+  //       <UpdateUserData />
+  //     </DashboardClient>
+  //   )
+  // }
 export default async function DashboardPage() {
+
   const session = await auth()
 
   if (!session) {

@@ -152,6 +152,10 @@ class ApiClient {
   async getDashboardFromOneUser(userId: string) {
     return this.request(`/api/v1/dashboards?id=${userId}`);
   }
+
+  async checkUserDataIsValid(userId: string) {
+    return this.request(`/api/v1/users/check-user-data-is-valid/${userId}`);
+  }
 }
 
 

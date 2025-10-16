@@ -153,3 +153,23 @@ async def get_user_with_admin_status(user_id: str, db: AsyncSession) -> Optional
         "createdAt": user.createdAt,
         "updatedAt": user.updatedAt
     }
+
+async def check_user_data_is_valid(user_id: str, db: AsyncSession) -> bool:
+    """Проверка, является ли пользователь с полным набором данных"""
+    result = await db.execute(
+        select(UserModel).where(
+            (UserModel.id == user_id) &
+            (UserModel.phone.isnot(None)) & (UserModel.phone != '') &
+            (UserModel.age.isnot(None)) &
+            (UserModel.gender.isnot(None)) &
+            (UserModel.passport_series.isnot(None)) &
+            (UserModel.passport_number.isnot(None)) &
+            (UserModel.place_of_registration.isnot(None)) &
+            (UserModel.place_of_work.isnot(None)) &
+            (UserModel.position.isnot(None)) &
+            (UserModel.cout_of_credits.isnot(None)) &
+            (UserModel.count_of_cards.isnot(None))
+        )
+    )
+    user = result.scalar_one_or_none()
+    return user is not None

@@ -8,4 +8,6 @@
     "python.linting.enabled": true,
     "python.linting.pylintEnabled": false,
     "python.linting.flake8Enabled": true
+    "editor.mouseWheelZoom": true
+    "editor.minimap.enabled": false
 }

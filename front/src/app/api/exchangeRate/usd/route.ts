@@ -5,9 +5,6 @@ export async function GET() {
             headers: {
                 'Content-Type': 'application/json',
             },
-            next: {
-                revalidate: 3600,
-            },
         })
 
         if (!res.ok){

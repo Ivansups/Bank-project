@@ -1,9 +1,9 @@
 from typing import Annotated
-from fastapi import APIRouter, Body, Depends, Path, HTTPException
+from fastapi import APIRouter, Depends, Path
 from sqlalchemy.ext.asyncio import AsyncSession
 from uuid import UUID
-from schemas.user_schema import UserCreate, UserUpdate, UserSync
-from crud.users_crud import create_user, get_user, get_users, update_user, delete_user, sync_yandex_user
+from schemas.user_schema import UserCreate, UserUpdate
+from crud.users_crud import create_user, get_user, get_users, update_user, delete_user, sync_yandex_user, check_user_data_is_valid
 from db.session import get_db
 
 # Создаем роутер
@@ -23,6 +23,11 @@ async def get_user_endpoint(user_id: Annotated[UUID, Path(description="The id of
 async def get_users_endpoint(db: AsyncSession = Depends(get_db)):
     """Get all users"""
     return await get_users(db)
+
+@router.get("/check-user-data-is-valid/{user_id}")
+async def check_user_data_is_valid_endpoint(user_id: Annotated[UUID, Path(description="The id of the user to check")], db: AsyncSession = Depends(get_db)):
+    """Check if user data is valid"""
+    return await check_user_data_is_valid(str(user_id), db)
 
 @router.put("/{user_id}")
 async def update_user_endpoint(user_id: Annotated[UUID, Path(description="The id of the user to update")], user: UserUpdate, db: AsyncSession = Depends(get_db)):

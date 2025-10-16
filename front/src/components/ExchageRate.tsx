@@ -28,18 +28,18 @@ export default function ExchageRate() {
 
     
     if (loading) {
-        return <LoadingSpinner />;
+        return <LoadingSpinner text='Loading exchange rate...' />;
     }
 
     if (error) {
-        return <div>Error loading exchange rate</div>;
+        return <div className='mt-4 border-2 border-gray-200 rounded-lg p-4 text-center bg-gradient-to-br from-red-500 to-yellow-500'>Error loading exchange rate</div>;
     }
 
     return (
         <div className='mt-4 border-2 border-gray-200 rounded-lg p-4 text-center bg-gradient-to-br from-green-500 to-blue-500'>
             <h1>Exchage Rate</h1>
-            <div>USD Exchange Rate: {usdRate}</div>
-            <div>EUR Exchange Rate: {eurRate}</div>
+            <div>USD : {usdRate}</div>
+            <div>EUR : {eurRate}</div>
         </div>
     )
 }

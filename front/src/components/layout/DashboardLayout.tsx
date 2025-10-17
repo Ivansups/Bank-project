@@ -31,7 +31,7 @@ export default function DashboardLayout({
   return (
     <div className={`flex flex-col min-h-screen ${className}`}>
       {/* Header */}
-      <nav className="bg-white shadow-sm border-b border-gray-200">
+      <nav className="bg-white/95 backdrop-blur-lg shadow-sm border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
             <div className="flex items-center">
@@ -69,17 +69,17 @@ export default function DashboardLayout({
       <div className="flex flex-1">
         {/* Sidebar */}
         {showSidebar && sidebarItems.length > 0 && (
-          <aside className="w-64 bg-gray-50 border-r border-gray-200">
+          <aside className="w-64">
             <nav className="mt-5 px-2">
               <div className="space-y-1">
                 {sidebarItems.map((item, index) => (
                   <Link
                     key={index}
                     href={item.href}
-                    className={`group flex items-center px-2 py-2 text-sm font-medium rounded-md transition-colors ${
+                    className={`group flex items-center px-2 py-2 text-lg font-medium rounded-md transition-colors ${
                       item.active
                         ? 'bg-indigo-100 text-indigo-900'
-                        : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
+                        : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
                     }`}
                   >
                     {item.icon && (
@@ -96,7 +96,7 @@ export default function DashboardLayout({
         )}
         
         {/* Main Content */}
-        <main className="flex-1 bg-gray-50">
+        <main className="flex-1 bg-white/60 backdrop-blur-sm">
           <div className="py-6">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               {children}

@@ -6,6 +6,10 @@ import ExchageRate from "@/components/ExchageRate";
 import { checkUserDataIsValid } from "@/dal/user";
 import UpdateUserData from "@/components/UpdateUserData";
 import DynamicBackground from "@/components/DynamicBackground";
+
+export default async function DashboardPage() {
+
+  const session = await auth()
   // const userDataIsValid = await checkUserDataIsValid(session?.user?.id || '')
 
   // if (!userDataIsValid) {
@@ -15,9 +19,6 @@ import DynamicBackground from "@/components/DynamicBackground";
   //     </DashboardClient>
   //   )
   // }
-export default async function DashboardPage() {
-
-  const session = await auth()
 
   if (!session) {
     return (
@@ -40,7 +41,6 @@ export default async function DashboardPage() {
   ];
 
   return (
-    <div>
     <DashboardClient 
       user={{
         name: session.user?.name || undefined,
@@ -106,6 +106,5 @@ export default async function DashboardPage() {
         <ExchageRate />
       </div>
     </DashboardClient>
-    </div>
   )
 }

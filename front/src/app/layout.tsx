@@ -24,7 +24,7 @@ const backgroundConfig = {
   imageSrc: "/png/0001.png", 
   fallBackOnMobile: true,
   overlay: true,
-  overlayOpacity: 0.3
+  overlayOpacity: 0.0
 };
 
 export default function RootLayout({
@@ -41,7 +41,7 @@ export default function RootLayout({
         <DynamicBackground {...backgroundConfig} />
         
         {/* Сохраняем структуру с контентом */}
-        <div className="relative z-10 min-h-screen bg-gradient-to-br from-green-500/80 to-blue-500/80 flex flex-col items-center justify-center">
+        <div className="relative z-10 min-h-screen flex flex-col items-center justify-center">
           <SessionProvider>
             {children}
           </SessionProvider>

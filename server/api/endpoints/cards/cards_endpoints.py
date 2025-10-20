@@ -5,7 +5,6 @@ from schemas.card_schema import CardCreate, CardUpdate
 from db.session import get_db
 from crud.cards_crud import get_one_user_cards, get_all_users_cards, create_card, update_card, delete_card
 
-# Создаем роутер
 router = APIRouter()
 
 @router.get("/cards")

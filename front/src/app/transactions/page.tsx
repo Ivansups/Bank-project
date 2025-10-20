@@ -1,27 +1,27 @@
 import { auth } from "@/lib/auth";
 import { PageLayout } from "@/components/layout";
-import SetCards from "@/components/SetCards";
 import SetTransactions from "@/components/SetTransactions";
 import { getTransactions } from "@/dal/transaction";
 import { getUser } from "@/dal/user";
 
-export default async function ProfilePage() {
+export default async function Transactions() {
   const session = await auth();
   const user = getUser(session!.user.id)
   const transaction = await getTransactions(session!.user.id);
   try {
     return (
-      <PageLayout 
-        title="Профиль"
+        <div>
+        <PageLayout 
+        title="Страница с транзакциями"
         subtitle={`Добро пожаловать, ${(await user).name}`}
         maxWidth="2xl"
         className="py-8"
       >
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="gap-8">
           <SetTransactions transactions={transaction || []} />
-          <SetCards cards={(await user).cards || []} />
         </div>
-      </PageLayout>
+        </PageLayout>
+        </div>
     );
   } catch (error) {
     console.error("Profile page error:", error);

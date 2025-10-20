@@ -47,7 +47,7 @@ export default function PageLayout({
   };
   
   return (
-    <div className={`${backgroundClasses[background]} ${className}`}>
+    <div>
       <div className={`mx-auto ${maxWidthClasses[maxWidth]} ${paddingClasses[padding]}`}>
         {showHeader && (title || subtitle || headerContent) && (
           <div className="mb-8">

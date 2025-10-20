@@ -7,7 +7,6 @@ from fastapi import Depends
 from typing import Annotated
 from fastapi import Body
 
-# Создаем роутер
 router = APIRouter()
 
 @router.get("/transactions")
@@ -20,7 +19,7 @@ async def create_transaction(transaction: Annotated[TransactionCreate, Body(desc
     result = await create_transaction(transaction, db)
     return result
 
-@router.get("/transactions/one_user/{transaction_id}")
-async def get_one_transactions(transaction_id: str, db: AsyncSession = Depends(get_db)):
-    result = await get_one_user_transactions(transaction_id, db)
+@router.get("/transactions/one_user/{user_id}")
+async def get_one_transactions(user_id: str, db: AsyncSession = Depends(get_db)):
+    result = await get_one_user_transactions(user_id, db)
     return result

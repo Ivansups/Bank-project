@@ -3,23 +3,13 @@ import { auth } from "@/lib/auth"
 import DashboardClient from "@/components/DashboardClient";
 import { Card, LoadingSpinner } from "@/components/ui";
 import ExchageRate from "@/components/ExchageRate";
-import { checkUserDataIsValid } from "@/dal/user";
-import UpdateUserData from "@/components/UpdateUserData";
-import DynamicBackground from "@/components/DynamicBackground";
+import SetCards from "@/components/SetCards";
+import { getUser } from "@/dal/user";
 
 export default async function DashboardPage() {
 
   const session = await auth()
-  // const userDataIsValid = await checkUserDataIsValid(session?.user?.id || '')
-
-  // if (!userDataIsValid) {
-  //   return (
-  //     <DashboardClient>
-  //       <UpdateUserData />
-  //     </DashboardClient>
-  //   )
-  // }
-
+  const user = getUser(session!.user.id)
   if (!session) {
     return (
       <DashboardClient>
@@ -35,9 +25,8 @@ export default async function DashboardPage() {
 
   const sidebarItems = [
     { label: "Главная", href: "/dashboard", active: true },
-    { label: "Профиль", href: "/profile" },
+    // { label: "Карты и транзакции", href: "/profile" },
     { label: "Транзакции", href: "/transactions" },
-    { label: "Карты", href: "/cards" },
   ];
 
   return (
@@ -104,6 +93,7 @@ export default async function DashboardPage() {
           </Card>
         )}
         <ExchageRate />
+        <SetCards cards={(await user).cards || []}/>
       </div>
     </DashboardClient>
   )

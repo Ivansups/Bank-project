@@ -2,10 +2,13 @@
 import Link from "next/link"
 import { auth, signOut } from "@/lib/auth"
 import { redirect } from "next/navigation"
+import { checkUserDataIsValid } from "@/dal/user";
+import UpdateUserData from "@/components/UpdateUserData";
 
 export default async function Home() {
   const session = await auth()
-  
+  const userDataIsValid = await checkUserDataIsValid(session?.user?.id ?? '')
+
   if (session) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -18,12 +21,22 @@ export default async function Home() {
               Ваш банковский аккаунт готов к использованию
             </p>
             <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
+              {userDataIsValid ? (
               <Link
-                href="/dashboard"
+                href="/controlPanel"
                 className="inline-flex items-center px-8 py-4 border border-transparent text-lg font-medium rounded-lg text-white bg-indigo-600 hover:bg-indigo-700 shadow-lg transition-all duration-200 hover:scale-105"
               >
                 Перейти в панель управления
               </Link>
+              ): (
+                <Link
+                href="/updatePage"
+                className="inline-flex items-center px-8 py-4 border border-transparent text-lg font-medium rounded-lg text-white bg-indigo-600 hover:bg-indigo-700 shadow-lg transition-all duration-200 hover:scale-105"
+              >
+                Дополнить данные
+              </Link>
+              )}
+
               <form action={async () => {
                 "use server"
                 await signOut({ redirectTo: "/" })

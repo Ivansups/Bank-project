@@ -25,7 +25,6 @@ export default function SetCards({
   const [cardsPerPage] = useState<number>(6);
 
 
-  // Фильтрация карт по поисковому запросу
   const filteredCards = useMemo(() => {
     if (!searchTerm) return cards;
     return cards.filter(card => 
@@ -35,13 +34,11 @@ export default function SetCards({
     );
   }, [cards, searchTerm]);
 
-  // Пагинация
   const totalPages = Math.ceil(filteredCards.length / cardsPerPage);
   const startIndex = (currentPage - 1) * cardsPerPage;
   const endIndex = startIndex + cardsPerPage;
   const currentCards = filteredCards.slice(startIndex, endIndex);
 
-  // Сброс страницы при изменении поиска
   useEffect(() => {
     setCurrentPage(1);
   }, [searchTerm]);
@@ -62,7 +59,7 @@ export default function SetCards({
 
   return (
     <UICard 
-      title="Мои карты"
+      title="Мои счета"
       variant="elevated"
       className="w-full max-w-6xl mx-auto"
       header={
@@ -160,7 +157,7 @@ export default function SetCards({
                 </svg>
               </div>
               <h3 className="text-lg font-medium text-gray-900 mb-2">
-                {searchTerm ? 'Карты не найдены' : 'У вас пока нет карт'}
+                {searchTerm ? 'Счета не найдены' : 'У вас пока нет счетов'}
               </h3>
               <p className="text-gray-500 mb-4">
                 {searchTerm 

@@ -1,9 +1,7 @@
 // front/src/app/page.tsx
 import Link from "next/link"
 import { auth, signOut } from "@/lib/auth"
-import { redirect } from "next/navigation"
 import { checkUserDataIsValid } from "@/dal/user";
-import UpdateUserData from "@/components/UpdateUserData";
 
 export default async function Home() {
   const session = await auth()

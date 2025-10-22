@@ -18,7 +18,7 @@ export default function PageLayout({
   subtitle,
   showHeader = true,
   headerContent,
-  className = '',
+  // className = '',
   maxWidth = 'xl',
   padding = 'md',
   background = 'default'
@@ -39,12 +39,12 @@ export default function PageLayout({
     lg: 'px-8 py-12'
   };
   
-  const backgroundClasses = {
-    default: 'min-h-screen bg-gradient-to-br from-green-500 to-blue-500',
-    gradient: 'min-h-screen bg-gradient-to-br from-indigo-500 to-purple-600',
-    white: 'min-h-screen bg-white',
-    gray: 'min-h-screen bg-gray-50'
-  };
+  // const backgroundClasses = {
+  //   default: 'min-h-screen bg-gradient-to-br from-green-500 to-blue-500',
+  //   gradient: 'min-h-screen bg-gradient-to-br from-indigo-500 to-purple-600',
+  //   white: 'min-h-screen bg-white',
+  //   gray: 'min-h-screen bg-gray-50'
+  // };
   
   return (
     <div>

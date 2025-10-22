@@ -1,21 +1,10 @@
-import { updateUser } from "@/dal/user" 
-import { auth } from "@/lib/auth"
+// // import { updateUser } from "@/dal/user" 
+// import { auth } from "@/lib/auth"
 import Link from "next/link"
 
 export default async function UpdateUserData() {
-    const session = await auth()
-    const user = await updateUser(session?.user?.id || '', {
-        phone: "",
-        age: 0,
-        gender: "",
-        passport_series: "",
-        passport_number: "",
-        place_of_registration: "",
-        place_of_work: "",
-        position: "",
-        cout_of_credits: 0,
-        count_of_cards: 0,
-    })
+    // const session = await auth()
+
 return (
   <div className="flex flex-col">
     <h1 className="font-semibold text-xl">Перед тем, как Вы начнете пользоваться сервисом, необходимо заполнить следующие данные:</h1>

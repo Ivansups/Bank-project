@@ -22,23 +22,26 @@ services:
 
   # FastAPI бэкенд
   server:
-    build:
-      context: ./server
-      dockerfile: Dockerfile
-    container_name: bank_server
-    environment:
-      - DATABASE_URL=postgresql+asyncpg://bank_user:bank_password@postgres:5432/bank_db
-      - PYTHONPATH=/app
-    ports:
-      - "8000:8000"
-    depends_on:
-      postgres:
-        condition: service_healthy
-    networks:
-      - bank_network
-    volumes:
-      - ./server:/app
-    command: ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+      build:
+        context: ./server
+        dockerfile: Dockerfile
+      container_name: bank_server
+      environment:
+        - DATABASE_URL=postgresql+asyncpg://bank_user:bank_password@postgres:5432/bank_db
+        - PYTHONPATH=/app
+      ports:
+        - "8000:8000"
+      depends_on:
+        postgres:
+          condition: service_healthy
+      networks:
+        - bank_network
+      volumes:
+        - ./server:/app
+      command: >
+        sh -c "sleep 5 && 
+              alembic upgrade head && 
+              uvicorn main:app --host 0.0.0.0 --port 8000 --reload"
 
   # Next.js фронтенд
   frontend:

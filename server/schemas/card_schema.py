@@ -1,19 +1,22 @@
-import uuid
 from uuid import UUID
-from enum import Enum as PyEnum
-from pydantic import BaseModel, Field, EmailStr
+from pydantic import BaseModel, Field
+from datetime import datetime
 
-class Card(BaseModel):
-    id: UUID = Field(description="Card ID")
-    amount: float = Field(nullable=False)
-    user_id: UUID = Field(nullable=False)
-    createdAt: str = Field(description="Creation timestamp")
-    updatedAt: str = Field(description="Last update timestamp")
+class CardBase(BaseModel):
+    amount: float = Field(..., ge=0, description="Card balance")
+    user_id: UUID = Field(..., description="User ID")
+
+class CardCreate(CardBase):
+    pass
+
+class Card(CardBase):
+    id: UUID
+    createdAt: datetime
+    updatedAt: datetime
     
-class CardCreate(BaseModel):
-    amount: float = Field(nullable=False)
-    user_id: UUID = Field(nullable=False)
+    class Config:
+        from_attributes = True
 
 class CardUpdate(BaseModel):
-    amount: float = Field(nullable=True)
-    status: str = Field(nullable=True)
+    amount: float = Field(None, ge=0)
+    # status поле удалено, так как у карты нет статуса

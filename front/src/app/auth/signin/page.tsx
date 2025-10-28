@@ -6,7 +6,7 @@ import { Button, Card } from "@/components/ui";
 
 export default function SignInPage() {
   const handleYandexSignIn = () => {
-    signIn("yandex", { callbackUrl: "/dashboard" })
+    signIn("yandex", { callbackUrl: "/controlPanel" })
   }
 
   const yandexIcon = (

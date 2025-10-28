@@ -6,7 +6,6 @@ import { Card } from "@/types/card";
 
 export async function getCards(userId?: string): Promise<Card[]> {
     if (userId) {
-        await requireAuth();
         try {
             const response = await apiClient.getCardsFromOneUser(userId);
             return response.data as Card[];
@@ -27,7 +26,6 @@ export async function getCards(userId?: string): Promise<Card[]> {
 }
 
 export async function createCard(card: Card): Promise<Card> {
-    await requireAuth();
     try {
         const response = await apiClient.createCard(card as unknown as Record<string, unknown>);
         return response.data as Card;
@@ -38,7 +36,6 @@ export async function createCard(card: Card): Promise<Card> {
 }
 
 export async function updateCard(card: Card): Promise<Card> {
-    await requireAuth();
     try {
         const response = await apiClient.updateCard(card.id, card as unknown as Record<string, unknown>);
         return response.data as Card;
@@ -49,7 +46,6 @@ export async function updateCard(card: Card): Promise<Card> {
 }
 
 export async function deleteCard(cardId: string): Promise<void> {
-    await requireAuth();
     try {
         await apiClient.deleteCard(cardId);
     } catch (error) {

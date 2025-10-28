@@ -4,12 +4,12 @@ import DashboardClient from "@/components/DashboardClient";
 import { Card, LoadingSpinner } from "@/components/ui";
 import ExchageRate from "@/components/ExchageRate";
 import SetCards from "@/components/SetCards";
-import { getUser } from "@/dal/user";
+import { getUserDataServ} from "@/services/user_serv"
 
 export default async function DashboardPage() {
 
   const session = await auth()
-  const user = getUser(session!.user.id)
+  const user = getUserDataServ(session!.user.id)
   if (!session) {
     return (
       <DashboardClient>

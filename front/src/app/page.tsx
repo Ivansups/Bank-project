@@ -1,11 +1,11 @@
 // front/src/app/page.tsx
 import Link from "next/link"
 import { auth, signOut } from "@/lib/auth"
-import { checkUserDataIsValid } from "@/dal/user";
+import { checkIsDataValidServ } from "@/services/user_serv"
 
 export default async function Home() {
   const session = await auth()
-  const userDataIsValid = await checkUserDataIsValid(session?.user?.id ?? '')
+  const userDataIsValid = await checkIsDataValidServ(session?.user?.id ?? '')
 
   if (session) {
     return (

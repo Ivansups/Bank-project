@@ -6,7 +6,7 @@ import LoginInterseptopClient from "./LoginInterseptopClient";
 
 function LoginModalContent() {
   const handleYandexSignIn = () => {
-    signIn("yandex", { callbackUrl: "/dashboard" })
+    signIn("yandex", { callbackUrl: "/controlPanel" })
   }
 
   return (

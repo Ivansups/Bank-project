@@ -29,7 +29,6 @@ export interface UserUpdate {
     count_of_cards: number;
 }
 export async function getUser(userId: string): Promise<User & { cards: Card[]; transactions: Transaction[]; dashboard: DashboardStats }> {
-    await requireAuth();
     try {
         const [userResponse, cardsResponse, transactionsResponse, dashboardResponse] = await Promise.all([
             apiClient.getUser(userId),
@@ -51,7 +50,6 @@ export async function getUser(userId: string): Promise<User & { cards: Card[]; t
 }
 
 export async function getUsers(): Promise<User[]>{
-    await requireAdmin();
     try {
         const response = await apiClient.getUsers();
         return response.data as User[];
@@ -62,7 +60,6 @@ export async function getUsers(): Promise<User[]>{
 }
 
 export async function createUser(user: User): Promise<User>{
-    await requireAdmin();
     try {
         const response = await apiClient.createUser(user as unknown as Record<string, unknown>);
         return response.data as User;
@@ -81,7 +78,6 @@ export async function createUser(user: User): Promise<User>{
 }
 
 export async function updateUser(userId: string, userData: Partial<UserUpdate> = {}): Promise<User> {
-    await requireAuth();
     try {
         const response = await apiClient.updateUser(userId, userData as unknown as Record<string, unknown>);
         return response.data as User;
@@ -92,7 +88,6 @@ export async function updateUser(userId: string, userData: Partial<UserUpdate> =
 }
 
 export async function deleteUser(userId: string): Promise<void>{
-    await requireAdmin();
     try {
         await apiClient.deleteUser(userId);
     } catch (error) {
@@ -101,7 +96,6 @@ export async function deleteUser(userId: string): Promise<void>{
 }
 
 export async function checkUserDataIsValid(userId: string): Promise<boolean> {
-    await requireAuth();
     try {
         const response = await apiClient.checkUserDataIsValid(userId);
         return response.data as boolean;

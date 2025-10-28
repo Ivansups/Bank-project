@@ -1,13 +1,13 @@
 import { auth } from "@/lib/auth";
 import { PageLayout } from "@/components/layout";
 import SetTransactions from "@/components/SetTransactions";
-import { getTransactions } from "@/dal/transaction";
-import { getUser } from "@/dal/user";
+import { getUserDataServ }from "@/services/user_serv"
+import { getUserTransactionsServ } from "@/services/transaction_serv"
 
 export default async function Transactions() {
   const session = await auth();
-  const user = getUser(session!.user.id)
-  const transaction = await getTransactions(session!.user.id);
+  const user = getUserDataServ(session!.user.id)
+  const transaction = await getUserTransactionsServ(session!.user.id);
   try {
     return (
         <div>

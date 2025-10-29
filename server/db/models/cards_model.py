@@ -17,3 +17,4 @@ class CardModel(Base):
     updatedAt = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     user = relationship('UserModel', back_populates='cards')
+    transactions = relationship('TransactionModel', back_populates='card')
